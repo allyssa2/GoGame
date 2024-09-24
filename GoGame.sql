@@ -1,0 +1,295 @@
+CREATE DATABASE GOGAME
+GO
+USE GOGAME
+GO
+
+CREATE TABLE MsStaff (
+StaffID VARCHAR(5) PRIMARY KEY CHECK (StaffID LIKE 'ST[0-9][0-9][0-9]'),
+StaffName VARCHAR(100) NOT NULL,
+StaffGender VARCHAR(6) NOT NULL CHECK (StaffGender LIKE 'Male' OR StaffGender LIKE 'Female'),
+StaffDOB DATE NOT NULL,
+StaffSalary BIGINT NOT NULL,
+StaffPhone BIGINT NOT NULL,
+StaffAddress VARCHAR(300) NOT NULL
+)
+
+INSERT INTO MsStaff VALUES
+('ST001','Budi Utomo', 'Male', '2000-05-12', 3000000, 081212123445, 'Jl. Kehangatan 1'),
+('ST002','Agung Atma', 'Male', '1980-03-30', 4500000, 089531729053, 'Jl. Kemurnian Dingin'),
+('ST003', 'Arkan Wijaya', 'Male', '2003-11-22', 2800000, 08121212344, 'Jl. Kesehatan 30'),
+('ST004', 'Catherine Lie', 'Female', '1998-10-08', 4280000, 08719482019, 'Jl. Pegangsaan Barat'),
+('ST005', 'Lisa Betty', 'Female', '1986-09-16', 7955000, 089618203816, 'Jl. Diponegoro No. 10'),
+('ST006', 'Jennie Nadia', 'Female', '1999-06-01', 3800000, 089190213279, 'Jl. Veteran No. 8'),
+('ST007', 'Misaki Putri', 'Female', '1994-01-19', 2100000, 081827163548, 'Jl. Panggung No. 19'),
+('ST008', 'Rizky Ardianto', 'Male', '2000-02-04', 2600000, 0895728107682, 'Jl. Imam Bonjol No. 5'),
+('ST009', 'Lina Fitriani', 'Female', '1997-05-29', 4520000, 081538291027, 'Jl. Gajah Mada No. 17'),
+('ST010', 'Maya Indriani', 'Female', '1999-12-31', 6290000, 0892415376829, 'Jl. Ahmad Dahlan No. 18')
+
+CREATE TABLE MsGameType ( 
+GameTypeID VARCHAR(5) PRIMARY KEY CHECK (GameTypeID LIKE 'GT[0-9][0-9][0-9]'),
+GameTypeName VARCHAR(100) NOT NULL)
+
+INSERT INTO MsGameType VALUES
+('GT001', 'RPG'), 
+('GT002', 'MOBA'), 
+('GT003', 'SandBox'), 
+('GT004', 'Horror'), 
+('GT005', 'TPS'), 
+('GT006', 'Fighting'), 
+('GT007', 'Adventure'), 
+('GT008', 'Simulation'), 
+('GT009', 'Sport'), 
+('GT010', 'FPS')
+
+CREATE TABLE MsGamePrice(
+GamePriceID VARCHAR (5) PRIMARY KEY CHECK (GamePriceID LIKE 'PR[0-9][0-9][0-9]'),
+GameSales BIGINT NOT NULL,
+GamePurchase BIGINT NOT NULL,
+GameRental BIGINT NOT NULL
+)
+
+INSERT INTO MsGamePrice VALUES
+('PR001', 500000, 450000, 20000),
+('PR002', 500000, 450000, 20000),
+('PR003', 670000, 600000, 25000),
+('PR004', 1350000, 900000, 45000),
+('PR005', 6700000, 600000, 25000),
+('PR006', 500000, 450000, 20000),
+('PR007', 1250000, 900000, 40000),
+('PR008', 1200000, 900000, 40000),
+('PR009', 180000, 150000, 8000),
+('PR010', 1200000, 900000, 40000)
+
+
+CREATE TABLE MsGame(
+GameID VARCHAR (5) PRIMARY KEY CHECK (GameID LIKE 'GA[0-9][0-9][0-9]'),
+GameTypeID VARCHAR (5) FOREIGN KEY REFERENCES MsGameType(GameTypeID) ON UPDATE CASCADE ON DELETE CASCADE NOT NULL,
+GameName VARCHAR (50) NOT NULL CHECK (LEN(GameName)>=5),
+GameStock INT NOT NULL,
+GamePriceID VARCHAR (5) FOREIGN KEY REFERENCES MsGamePrice(GamePriceID) ON UPDATE CASCADE ON DELETE CASCADE NOT NULL,
+GameReleaseDate DATE CHECK (GameReleaseDate <= GETDATE()) NOT NULL
+)
+
+INSERT INTO MsGame VALUES
+('GA001', 'GT001', 'The Witcher 3: Wild Hunt', 10, 'PR001', '2015-05-19'),
+('GA002', 'GT001', 'The Elder Scrolls V: Skyrim', 3, 'PR002', '2011-11-11'),
+('GA003', 'GT010', 'Overwatch', 6, 'PR003', '2016-05-24'),
+('GA004', 'GT005', 'FIFA 22', 12, 'PR004', '2021-10-01'),
+('GA005', 'GT009', 'The Sims 4', 15, 'PR005', '2014-09-02'),
+('GA006', 'GT003', 'Gears of War 4', 2, 'PR006', '2016-04-11'),
+('GA007', 'GT007', 'Resident Evil Village', 50, 'PR007', '2021-05-07'),
+('GA008', 'GT010', 'Call of Duty: Modern Warfare', 32, 'PR008', '2011-11-18'),
+('GA009', 'GT002', 'Minecraft', 12, 'PR009', '1984-06-06'),
+('GA010', 'GT004', 'Assassins Creed Odyssey', 10, 'PR010', '2018-10-05')
+
+CREATE TABLE MsCustomer (
+CustomerID VARCHAR(5) PRIMARY KEY CHECK (CustomerID LIKE 'CU[0-9][0-9][0-9]'),
+CustomerName VARCHAR (100) NOT NULL,
+CustomerGender VARCHAR(6) CHECK (CustomerGender LIKE 'Male' OR CustomerGender LIKE 'Female') NOT NULL,
+CustomerDOB DATE NOT NULL,
+CustomerPhone BIGINT NOT NULL
+)
+
+INSERT INTO MsCustomer VALUES
+('CU001', 'Agnes Wijaya', 'Female', '2005-01-12', 081280250651),
+('CU002', 'Samuel Juan', 'Male', '2004-12-20', 081280250652),
+('CU003', 'Patricia Artha', 'Female', '2004-05-31', 081280250653),
+('CU004', 'Tiffany Angelia', 'Female', '2004-12-29', 081280250654),
+('CU005', 'Yosua Lieandi', 'Male', '2003-12-18', 081280250655),
+('CU006', 'Mikael Jordan', 'Male', '2004-07-07', 081280250656),
+('CU007', 'Chato Meyer', 'Male', '2004-04-05', 081280250657),
+('CU008', 'Rubennito Sugata', 'Male', '2003-08-02', 081280250658),
+('CU009', 'Michelle Rika', 'Female', '2004-12-04', 081280250659),
+('CU010', 'Angeline Alodia', 'Female', '2004-12-28', 081280250650)
+
+CREATE TABLE MsSupplier(
+SupplierID VARCHAR(5) PRIMARY KEY CHECK (SupplierID LIKE 'SU[0-9][0-9][0-9]'),
+SupplierName VARCHAR (100) NOT NULL,
+SupplierAddress VARCHAR(300)  NOT NULL,
+SupplierPhone BIGINT NOT NULL
+)
+
+INSERT INTO MsSupplier VALUES 
+('SU001','Nathan Wijaya','Jl. Bintang Driveng 72', 081264140820),
+('SU002', 'Eileen Winanto', 'Jl. Bahagia 42', 081264140821),
+('SU003', 'Abigail Angel', 'Jl. Harmonika 12', 081264140822),
+('SU004', 'Faustina Ansell', 'Jl. Harmoni 1', 081264156493),
+('SU005', 'Kartika Natalil', 'Jl. Drive 22', 081264140824),
+('SU006', 'Ronald Steven', 'Jl. Piano 25', 081264140825),
+('SU007', 'Nazwa Gracia', 'Jl. Kebayoran Baru 2', 08126414823),
+('SU008', 'Marco Gustavl', 'Jl. Bunga 27', 081264140826),
+('SU009', 'Marsha Gifara', 'Jl. Audemus 22', 081262940824),
+('SU010', 'Celine Beneva', 'Jl. Mutiara 232', 0812648900824)
+
+CREATE TABLE SalesTr(
+SalesID VARCHAR (5) PRIMARY KEY CHECK (SalesID LIKE 'SA[0-9][0-9][0-9]'),
+SalesDate DATE NOT NULL,
+StaffID VARCHAR (5) FOREIGN KEY REFERENCES MsStaff (StaffID) ON UPDATE CASCADE ON DELETE CASCADE NOT NULL,
+CustomerID VARCHAR(5) FOREIGN KEY REFERENCES MsCustomer (CustomerID) ON UPDATE CASCADE ON DELETE CASCADE NOT NULL
+)
+
+INSERT INTO SalesTr VALUES
+('SA001', '2022-12-11', 'ST005', 'CU002'),
+('SA002', '2022-12-11', 'ST001', 'CU006'),
+('SA003', '2022-12-11', 'ST005', 'CU003'),
+('SA004', '2022-12-12', 'ST002', 'CU001'),
+('SA005', '2022-12-12', 'ST007', 'CU008'),
+('SA006', '2022-12-13', 'ST004', 'CU010'),
+('SA007', '2022-12-14', 'ST005', 'CU003'),
+('SA008', '2022-12-14', 'ST009', 'CU007'),
+('SA009', '2022-12-14', 'ST009', 'CU006'),
+('SA010', '2022-12-14', 'ST009', 'CU004'),
+('SA011', '2022-12-15', 'ST004', 'CU009'),
+('SA012', '2022-12-16', 'ST008', 'CU003'),
+('SA013', '2022-12-16', 'ST003', 'CU002'),
+('SA014', '2022-12-17', 'ST010', 'CU001'),
+('SA015', '2022-12-18', 'ST006', 'CU005')
+
+CREATE TABLE SalesTrDetail(
+SalesID VARCHAR (5) FOREIGN KEY REFERENCES SalesTr (SalesID) ON UPDATE CASCADE ON DELETE CASCADE NOT NULL,
+GameID VARCHAR (5) FOREIGN KEY REFERENCES MsGame (GameID) ON UPDATE CASCADE ON DELETE CASCADE NOT NULL,
+SalesQuantity INT NOT NULL
+)
+
+INSERT INTO SalesTrDetail VALUES
+('SA001', 'GA003', 5),
+('SA001', 'GA006', 1),
+('SA002', 'GA003', 3),
+('SA003', 'GA004', 1),
+('SA004', 'GA009', 2),
+('SA004', 'GA001', 3),
+('SA005', 'GA006', 2),
+('SA006', 'GA002', 1),
+('SA007', 'GA004', 4),
+('SA007', 'GA009', 1),
+('SA007', 'GA006', 1),
+('SA008', 'GA004', 1),
+('SA009', 'GA004', 3),
+('SA009', 'GA008', 1),
+('SA010', 'GA007', 5),
+('SA010', 'GA003', 5),
+('SA011', 'GA005', 1),
+('SA012', 'GA009', 1),
+('SA013', 'GA010', 2),
+('SA013', 'GA003', 1),
+('SA014', 'GA002', 3),
+('SA014', 'GA007', 2),
+('SA015', 'GA009', 1),
+('SA015', 'GA005', 1),
+('SA015', 'GA002', 4)
+
+CREATE TABLE RentalTr(
+RentalID VARCHAR(5) PRIMARY KEY CHECK (RentalID LIKE 'RA[0-9][0-9][0-9]'),
+RentalDate DATE NOT NULL,
+StaffID VARCHAR (5) FOREIGN KEY REFERENCES MsStaff (StaffID) ON UPDATE CASCADE ON DELETE CASCADE NOT NULL,
+CustomerID VARCHAR (5) FOREIGN KEY REFERENCES MsCustomer (CustomerID) ON UPDATE CASCADE ON DELETE CASCADE NOT NULL
+)
+
+INSERT INTO RentalTr VALUES
+('RA001', '2022-12-03', 'ST005','CU005'),
+('RA002', '2022-12-04', 'ST001','CU008'),
+('RA003', '2022-12-05', 'ST001','CU001'),
+('RA004', '2022-12-06', 'ST004','CU001'),
+('RA005', '2022-12-07', 'ST006','CU005'),
+('RA006', '2022-12-08', 'ST007','CU007'),
+('RA007', '2022-12-09', 'ST007','CU006'),
+('RA008', '2022-12-10', 'ST009','CU004'),
+('RA009', '2022-12-11', 'ST010','CU009'),
+('RA010', '2022-12-12', 'ST005','CU006'),
+('RA011', '2022-12-13', 'ST002','CU002'),
+('RA012', '2022-12-14', 'ST004','CU009'),
+('RA013', '2022-12-15', 'ST003','CU005'),
+('RA014', '2022-12-20', 'ST003','CU009'),
+('RA015', '2022-12-20', 'ST008','CU001')
+
+CREATE TABLE RentalTrDetail(
+RentalID VARCHAR (5) FOREIGN KEY REFERENCES RentalTr(RentalID) ON UPDATE CASCADE ON DELETE CASCADE NOT NULL,
+RentalQuantity INT NOT NULL,
+GameID VARCHAR(5) FOREIGN KEY REFERENCES MsGame(GameID) ON UPDATE CASCADE ON DELETE CASCADE NOT NULL,
+)
+
+INSERT INTO RentalTrDetail VALUES
+('RA001', 3 , 'GA005'),
+('RA002', 5,  'GA001'),
+('RA003', 2 , 'GA001'),
+('RA004', 6 , 'GA004'),
+('RA005', 2 , 'GA006'),
+('RA006', 8 , 'GA007'),
+('RA007', 3, 'GA007'),
+('RA008', 12 ,'GA009'),
+('RA009', 1, 'GA010'),
+('RA010', 2, 'GA005'),
+('RA011', 3, 'GA002'),
+('RA012', 4, 'GA004'),
+('RA013', 5, 'GA003'),
+('RA014', 2, 'GA003'),
+('RA015', 2, 'GA008'),
+('RA001', 3, 'GA010'),
+('RA015', 3, 'GA009'),
+('RA002', 5, 'GA005'),
+('RA003', 1, 'GA006'),
+('RA004', 5, 'GA007'),
+('RA005', 4, 'GA002'),
+('RA006', 5, 'GA001'),
+('RA007', 9, 'GA002'),
+('RA010', 6, 'GA004'),
+('RA009', 7, 'GA003')
+
+CREATE TABLE PurchaseTr(
+PurchaseID VARCHAR (5) PRIMARY KEY CHECK (PurchaseID LIKE 'PU[0-9][0-9][0-9]'), 
+PurchaseDate DATE NOT NULL,
+StaffID VARCHAR (5) FOREIGN KEY REFERENCES MsStaff (StaffID) ON UPDATE CASCADE ON DELETE CASCADE NOT NULL,
+SupplierID VARCHAR (5) FOREIGN KEY REFERENCES MsSupplier(SupplierID) ON UPDATE CASCADE ON DELETE CASCADE NOT NULL
+)
+
+INSERT INTO PurchaseTr VALUES 
+('PU001', '2019-12-20',  'ST001', 'SU001'),
+('PU002', '2019-12-25',  'ST002', 'SU002'),
+('PU003', '2019-12-27',  'ST003', 'SU003'),
+('PU004', '2019-12-28',  'ST004', 'SU004'),
+('PU005', '2019-12-30',  'ST005', 'SU005'),
+('PU006', '2019-12-31',  'ST005', 'SU005'),
+('PU007', '2020-01-05',  'ST006', 'SU006'),
+('PU008', '2020-01-07',  'ST004', 'SU004'),
+('PU009', '2020-01-10',  'ST007', 'SU007'),
+('PU010', '2020-01-12',  'ST008', 'SU008'),
+('PU011', '2020-01-17',  'ST009', 'SU009'),
+('PU012', '2020-01-19',  'ST010', 'SU010'),
+('PU013', '2020-01-25',  'ST010', 'SU010'),
+('PU014', '2020-01-30',  'ST002', 'SU002'),
+('PU015', '2020-01-31',  'ST004', 'SU004')
+
+CREATE TABLE PurchaseTrDetail(
+PurchaseID VARCHAR (5) FOREIGN KEY REFERENCES PurchaseTr (PurchaseID) ON UPDATE CASCADE ON DELETE CASCADE NOT NULL,
+GameID VARCHAR(5) FOREIGN KEY REFERENCES MsGame (GameID) ON UPDATE CASCADE ON DELETE CASCADE NOT NULL,
+PurchaseQuantity INT NOT NULL
+)
+
+INSERT INTO PurchaseTrDetail VALUES
+('PU001', 'GA001', 100),
+('PU001', 'GA005', 500),
+('PU002', 'GA002', 200),
+('PU002', 'GA005', 200),
+('PU002', 'GA010', 300),
+('PU003', 'GA003', 300),
+('PU003', 'GA007', 300),
+('PU004', 'GA004', 300),
+('PU004', 'GA005', 200),
+('PU005', 'GA006', 300),
+('PU005', 'GA007', 150),
+('PU007', 'GA003', 200),
+('PU007', 'GA004', 400),
+('PU008', 'GA009', 300),
+('PU009', 'GA008', 200),
+('PU009', 'GA009', 200),
+('PU010', 'GA002', 500),
+('PU011', 'GA003', 100),
+('PU012', 'GA004', 300),
+('PU012', 'GA007', 100),
+('PU013', 'GA009', 50),
+('PU014', 'GA010', 75), 
+('PU015', 'GA002', 100),
+('PU015', 'GA003', 300),
+('PU015', 'GA004', 50)
+
+DROP DATABASE GOGAME
